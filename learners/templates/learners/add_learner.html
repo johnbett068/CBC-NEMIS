@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}{% if form.instance.pk %}Edit Learner{% else %}Add Learner{% endif %} | CBC NEMIS Portal{% endblock %}
+
+{% block content %}
+<div class="min-h-screen p-6 bg-gradient-to-b from-blue-50 via-white to-blue-100">
+
+    <h1 class="text-3xl font-bold mb-4">{% if form.instance.pk %}Edit Learner{% else %}Add New Learner{% endif %}</h1>
+
+    <div class="bg-white shadow rounded-lg p-6 max-w-lg">
+        <form method="post" class="space-y-4">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
+                {% if form.instance.pk %}Update Learner{% else %}Add Learner{% endif %}
+            </button>
+            <a href="{% url 'learners:learner_list' %}" class="bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded">Cancel</a>
+        </form>
+    </div>
+
+</div>
+{% endblock %}

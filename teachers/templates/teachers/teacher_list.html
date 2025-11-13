@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>{{ dashboard_title }}</h1>
+
+<form method="get">
+    {{ search_form.query }}
+    <button type="submit" class="px-3 py-1 bg-blue-500 text-white rounded">Search</button>
+</form>
+
+<table class="table-auto border-collapse border border-gray-300 w-full mt-4">
+    <thead>
+        <tr class="bg-gray-200">
+            <th class="border px-2 py-1">#</th>
+            <th class="border px-2 py-1">Image</th>
+            <th class="border px-2 py-1">Name</th>
+            <th class="border px-2 py-1">Role</th>
+            <th class="border px-2 py-1">Email</th>
+            <th class="border px-2 py-1">Phone</th>
+            <th class="border px-2 py-1">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for teacher in teachers %}
+        <tr>
+            <td class="border px-2 py-1">{{ forloop.counter }}</td>
+            <td class="border px-2 py-1">
+                {% if teacher.profile_image %}
+                    <img src="{{ teacher.profile_image.url }}" alt="Profile Image" class="w-12 h-12 rounded-full">
+                {% else %}
+                    <div class="w-12 h-12 bg-gray-300 rounded-full flex items-center justify-center">N/A</div>
+                {% endif %}
+            </td>
+            <td class="border px-2 py-1">{{ teacher.user.get_full_name }}</td>
+            <td class="border px-2 py-1">{{ teacher.role }}</td>
+            <td class="border px-2 py-1">{{ teacher.user.email }}</td>
+            <td class="border px-2 py-1">{{ teacher.phone }}</td>
+            <td class="border px-2 py-1">
+                <a href="{% url 'teachers:teacher_detail' teacher.pk %}" class="text-blue-500">View</a> |
+                <a href="{% url 'teachers:teacher_update' teacher.pk %}" class="text-green-500">Edit</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="7" class="border px-2 py-1 text-center">No teachers found.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<a href="{% url 'teachers:teacher_add' %}" class="mt-4 inline-block px-4 py-2 bg-blue-500 text-white rounded">Add Teacher</a>
+{% endblock %}

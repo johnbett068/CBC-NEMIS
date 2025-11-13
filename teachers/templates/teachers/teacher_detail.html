@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>{{ dashboard_title }}</h1>
+
+<div class="flex items-center space-x-4 my-4">
+    {% if teacher.profile_image %}
+        <img src="{{ teacher.profile_image.url }}" alt="Profile Image" class="w-24 h-24 rounded-full">
+    {% else %}
+        <div class="w-24 h-24 bg-gray-300 rounded-full flex items-center justify-center">N/A</div>
+    {% endif %}
+    <div>
+        <p><strong>Name:</strong> {{ teacher.user.get_full_name }}</p>
+        <p><strong>Role:</strong> {{ teacher.role }}</p>
+        <p><strong>Email:</strong> {{ teacher.user.email }}</p>
+        <p><strong>Phone:</strong> {{ teacher.phone }}</p>
+    </div>
+</div>
+
+<h2>Class Assignments</h2>
+<ul>
+    {% for assignment in class_assignments %}
+        <li>{{ assignment.stream.grade }} - {{ assignment.stream.name }} {% if assignment.is_class_teacher %}(Class Teacher){% endif %}</li>
+    {% empty %}
+        <li>No class assignments.</li>
+    {% endfor %}
+</ul>
+
+<h2>Subject Assignments</h2>
+<ul>
+    {% for assignment in subject_assignments %}
+        <li>{{ assignment.subject.name }} - {{ assignment.stream.grade }} {{ assignment.stream.name }}</li>
+    {% empty %}
+        <li>No subject assignments.</li>
+    {% endfor %}
+</ul>
+
+<a href="{% url 'teachers:teacher_update' teacher.pk %}" class="mt-4 inline-block px-4 py-2 bg-green-500 text-white rounded">Edit Teacher</a>
+{% endblock %}

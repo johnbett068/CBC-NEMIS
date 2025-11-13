@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}Add School | CBC NEMIS{% endblock %}
+
+{% block content %}
+<div class="container mx-auto py-8">
+    <h1 class="text-3xl font-bold mb-6">Add New School</h1>
+
+    <div class="bg-white p-6 rounded shadow-md">
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded mt-4">
+                Add School
+            </button>
+        </form>
+    </div>
+
+    <div class="mt-6">
+        <a href="{% url 'schools:school_list' %}" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">
+            Back to Schools List
+        </a>
+    </div>
+</div>
+{% endblock %}

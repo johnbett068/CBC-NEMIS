@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>{{ dashboard_title }}</h1>
+
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ learner_form.as_p }}
+    <button type="submit" class="mt-4 px-4 py-2 bg-blue-500 text-white rounded">Save</button>
+</form>
+{% endblock %}

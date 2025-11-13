@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ dashboard_title }}{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50 p-6">
+
+    <!-- Breadcrumb -->
+    <nav class="text-gray-500 text-sm mb-4" aria-label="Breadcrumb">
+        <ol class="list-reset flex">
+            <li><a href="{% url 'home:home' %}" class="hover:text-gray-700">Home</a></li>
+            <li><span class="mx-2">/</span></li>
+            <li class="text-gray-700">{{ dashboard_title }}</li>
+        </ol>
+    </nav>
+
+    <!-- Greeting Card -->
+    <div class="bg-gradient-to-r from-blue-100 via-blue-50 to-green-100 p-6 rounded-2xl shadow-lg mb-8 flex flex-col md:flex-row items-center justify-between"
+         data-aos="fade-up">
+        <div>
+            <h2 class="text-2xl md:text-3xl font-bold text-blue-800">
+                Hello, {{ user.get_full_name|default:"User" }}!
+            </h2>
+            <p class="text-gray-700 mt-1">
+                Welcome to your {{ user.role|title|default:"Dashboard" }} dashboard.
+            </p>
+        </div>
+        <div class="mt-4 md:mt-0">
+            <i class="fas fa-chalkboard-teacher text-blue-600 text-4xl md:text-6xl animate-bounce"></i>
+        </div>
+    </div>
+
+    <!-- Summary Cards -->
+    <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="bg-blue-100 p-6 rounded-2xl shadow hover:shadow-lg">
+            <h2 class="text-xl font-semibold text-blue-800">Schools</h2>
+            <p class="text-gray-700 mt-2">{{ schools.count }}</p>
+        </div>
+        <div class="bg-green-100 p-6 rounded-2xl shadow hover:shadow-lg">
+            <h2 class="text-xl font-semibold text-green-800">Teachers</h2>
+            <p class="text-gray-700 mt-2">{{ teachers.count }}</p>
+        </div>
+        <div class="bg-yellow-100 p-6 rounded-2xl shadow hover:shadow-lg">
+            <h2 class="text-xl font-semibold text-yellow-800">Learners</h2>
+            <p class="text-gray-700 mt-2">{{ learners.count }}</p>
+        </div>
+    </section>
+
+    <!-- Schools Table -->
+    <section class="mt-10">
+        <h2 class="text-2xl font-semibold mb-4">All Schools in Your County</h2>
+        <div class="overflow-x-auto">
+            <table class="min-w-full bg-white rounded-2xl shadow">
+                <thead class="bg-blue-200 text-left">
+                    <tr>
+                        <th class="py-2 px-4">School Name</th>
+                        <th class="py-2 px-4">Subcounty</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for school in schools %}
+                    <tr class="border-b">
+                        <td class="py-2 px-4">{{ school.name }}</td>
+                        <td class="py-2 px-4">{{ school.subcounty }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td class="py-2 px-4" colspan="2">No schools found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- Teachers Table -->
+    <section class="mt-10">
+        <h2 class="text-2xl font-semibold mb-4">Teachers</h2>
+        <div class="overflow-x-auto">
+            <table class="min-w-full bg-white rounded-2xl shadow">
+                <thead class="bg-green-200 text-left">
+                    <tr>
+                        <th class="py-2 px-4">Name</th>
+                        <th class="py-2 px-4">School</th>
+                        <th class="py-2 px-4">Email</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for teacher in teachers %}
+                    <tr class="border-b">
+                        <td class="py-2 px-4">{{ teacher.get_full_name }}</td>
+                        <td class="py-2 px-4">{{ teacher.school.name }}</td>
+                        <td class="py-2 px-4">{{ teacher.email }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td class="py-2 px-4" colspan="3">No teachers found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- Learners Table -->
+    <section class="mt-10">
+        <h2 class="text-2xl font-semibold mb-4">Learners</h2>
+        <div class="overflow-x-auto">
+            <table class="min-w-full bg-white rounded-2xl shadow">
+                <thead class="bg-yellow-200 text-left">
+                    <tr>
+                        <th class="py-2 px-4">Name</th>
+                        <th class="py-2 px-4">School</th>
+                        <th class="py-2 px-4">Class</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for learner in learners %}
+                    <tr class="border-b">
+                        <td class="py-2 px-4">{{ learner.get_full_name }}</td>
+                        <td class="py-2 px-4">{{ learner.school.name }}</td>
+                        <td class="py-2 px-4">{{ learner.class_name }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td class="py-2 px-4" colspan="3">No learners found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+</div>
+{% endblock %}

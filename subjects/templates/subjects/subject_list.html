@@ -1,0 +1,9 @@
+<h2>Subjects</h2>
+<ul>
+{% for subject in subjects %}
+    <li>{{ subject.name }} ({{ subject.code }})</li>
+{% empty %}
+    <li>No subjects yet.</li>
+{% endfor %}
+</ul>
+<a href="{% url 'subjects:subject_add' %}">Add Subject</a>

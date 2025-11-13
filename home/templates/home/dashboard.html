@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard | CBC Education Portal{% endblock %}
+
+{% block content %}
+<h1 class="text-2xl font-bold mb-6">Dashboard</h1>
+
+{% if user.role == 'cabinet_secretary' %}
+    <p>Total Schools: {{ schools|length }}</p>
+    <p>Total Teachers: {{ teachers|length }}</p>
+    <p>Total Learners: {{ learners|length }}</p>
+
+{% elif user.role == 'county_director' or user.role == 'subcounty_director' %}
+    <p>Schools in your region: {{ schools|length }}</p>
+    <p>Teachers in your region: {{ teachers|length }}</p>
+    <p>Learners in your region: {{ learners|length }}</p>
+
+{% elif user.role == 'school_admin' %}
+    <p>Teachers in your school: {{ teachers|length }}</p>
+    <p>Learners in your school: {{ learners|length }}</p>
+
+{% elif user.role == 'teacher' %}
+    <p>Classes you teach: {{ classes|length }}</p>
+    <p>Subjects assigned: {{ subjects|length }}</p>
+    <p>Learners in your school: {{ learners|length }}</p>
+{% endif %}
+{% endblock %}

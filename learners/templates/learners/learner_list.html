@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>{{ dashboard_title }}</h1>
+
+<form method="get">
+    {{ search_form.query }}
+    <button type="submit" class="px-3 py-1 bg-blue-500 text-white rounded">Search</button>
+</form>
+
+<table class="table-auto border-collapse border border-gray-300 w-full mt-4">
+    <thead>
+        <tr class="bg-gray-200">
+            <th class="border px-2 py-1">#</th>
+            <th class="border px-2 py-1">Image</th>
+            <th class="border px-2 py-1">Name</th>
+            <th class="border px-2 py-1">Admission No.</th>
+            <th class="border px-2 py-1">Class</th>
+            <th class="border px-2 py-1">Stream</th>
+            <th class="border px-2 py-1">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for learner in learners %}
+        <tr>
+            <td class="border px-2 py-1">{{ forloop.counter }}</td>
+            <td class="border px-2 py-1">
+                {% if learner.profile_image %}
+                    <img src="{{ learner.profile_image.url }}" alt="Profile Image" class="w-12 h-12 rounded-full">
+                {% else %}
+                    <div class="w-12 h-12 bg-gray-300 rounded-full flex items-center justify-center">N/A</div>
+                {% endif %}
+            </td>
+            <td class="border px-2 py-1">{{ learner.first_name }} {{ learner.last_name }}</td>
+            <td class="border px-2 py-1">{{ learner.admission_no }}</td>
+            <td class="border px-2 py-1">{{ learner.grade }}</td>
+            <td class="border px-2 py-1">{{ learner.stream.name }}</td>
+            <td class="border px-2 py-1">
+                <a href="{% url 'learners:learner_detail' learner.pk %}" class="text-blue-500">View</a> |
+                <a href="{% url 'learners:learner_update' learner.pk %}" class="text-green-500">Edit</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="7" class="border px-2 py-1 text-center">No learners found.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<a href="{% url 'learners:learner_add' %}" class="mt-4 inline-block px-4 py-2 bg-blue-500 text-white rounded">Add Learner</a>
+{% endblock %}

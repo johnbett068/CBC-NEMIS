@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+
+{% block title %}CBC NEMIS Portal | Home{% endblock %}
+
+{% block content %}
+<div class="min-h-screen flex flex-col bg-gradient-to-b from-blue-50 via-white to-blue-100">
+
+    <!-- Breadcrumb -->
+    <nav class="bg-white py-2 px-4 rounded shadow-sm mb-4 max-w-7xl mx-auto mt-4">
+        <ol class="list-reset flex text-gray-600 text-sm sm:text-base">
+            {% for crumb in breadcrumb %}
+                {% if not forloop.last %}
+                    <li>
+                        <a href="{{ crumb.url }}" class="hover:text-blue-600">{{ crumb.name }}</a>
+                        <span class="mx-2">/</span>
+                    </li>
+                {% else %}
+                    <li class="text-gray-800 font-semibold">{{ crumb.name }}</li>
+                {% endif %}
+            {% endfor %}
+        </ol>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="text-center py-16 md:py-20 px-4 md:px-6 lg:px-8">
+        <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold text-blue-800 drop-shadow-md leading-tight">
+            Welcome to the CBC NEMIS Portal
+        </h1>
+        <p class="text-gray-700 text-base sm:text-lg md:text-xl mt-4 md:mt-6 max-w-3xl mx-auto">
+            Empowering Kenya’s education system through technology, transparency, and data-driven decision-making.
+        </p>
+        <div class="mt-6 md:mt-8">
+            <a href="#" class="bg-blue-700 text-white px-5 sm:px-6 py-2 sm:py-3 rounded-full font-semibold hover:bg-blue-800 transition">
+                Learn More
+            </a>
+        </div>
+    </section>
+
+    <!-- Dashboard Summary -->
+    <section class="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-6 md:gap-8 px-4 sm:px-6 mt-8 md:mt-10">
+        <div class="bg-gradient-to-tr from-blue-100 to-blue-200 p-6 sm:p-8 rounded-2xl shadow-md hover:shadow-xl transition transform hover:-translate-y-1">
+            <i class="fas fa-school text-blue-600 text-4xl sm:text-5xl mb-3 animate-bounce"></i>
+            <h2 class="text-xl sm:text-2xl font-semibold text-gray-800">Registered Schools</h2>
+            <p class="text-gray-500 text-sm sm:text-base mt-1 sm:mt-2">Total: {{ total_schools }}</p>
+        </div>
+        <div class="bg-gradient-to-tr from-green-100 to-green-200 p-6 sm:p-8 rounded-2xl shadow-md hover:shadow-xl transition transform hover:-translate-y-1">
+            <i class="fas fa-chalkboard-teacher text-green-600 text-4xl sm:text-5xl mb-3 animate-bounce"></i>
+            <h2 class="text-xl sm:text-2xl font-semibold text-gray-800">Active Teachers</h2>
+            <p class="text-gray-500 text-sm sm:text-base mt-1 sm:mt-2">Total: {{ total_teachers }}</p>
+        </div>
+    </section>
+
+    <!-- Role Cards -->
+    <section class="max-w-7xl mx-auto mt-12 md:mt-16 mb-12 md:mb-20 px-4 sm:px-6">
+        <h2 class="text-2xl sm:text-3xl font-bold text-gray-800 text-center mb-8 sm:mb-10">
+            Choose Your Role
+        </h2>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-10 justify-items-center">
+
+            {% comment %} Highlight current user's role {% endcomment %}
+            {% if role %}
+                {% for role_name, info in role_cards.items %}
+                    {% if role_name|lower == role and role_name != "Learner" %}
+                        <div class="relative group bg-white p-6 sm:p-8 rounded-2xl shadow-2xl transform -translate-y-1 sm:-translate-y-2 border-t-8 border-{{ info.color }}-600 w-full max-w-xs">
+                            <span class="absolute top-3 right-3 bg-{{ info.color }}-600 text-white text-xs font-bold px-2 py-1 rounded-full shadow-md">
+                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-{{ info.color }}-400 opacity-75"></span>
+                                <span class="relative text-xs sm:text-sm">Current Role</span>
+                            </span>
+                            <div class="flex flex-col items-center text-center space-y-3 sm:space-y-4">
+                                <i class="fas {{ info.icon }} text-{{ info.color }}-600 text-4xl sm:text-5xl"></i>
+                                <h3 class="text-lg sm:text-xl font-semibold text-gray-800">{{ role|title }}</h3>
+                                <p class="text-gray-500 text-xs sm:text-sm">{{ info.description }}</p>
+                                <a href="{{ info.url }}" class="bg-{{ info.color }}-600 text-white px-4 sm:px-5 py-2 sm:py-2.5 rounded-lg hover:bg-{{ info.color }}-700 transition text-sm sm:text-base">
+                                    Access Dashboard
+                                </a>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+
+            {% comment %} Display other role cards (exclude learners) {% endcomment %}
+            {% for role_name, info in role_cards.items %}
+                {% if role_name|lower != role and role_name != "Learner" %}
+                <div class="group bg-white p-6 sm:p-8 rounded-2xl shadow-lg hover:shadow-2xl transition transform hover:-translate-y-1 sm:hover:-translate-y-2 border-t-4 border-{{ info.color }}-600 w-full max-w-xs">
+                    <div class="flex flex-col items-center text-center space-y-3 sm:space-y-4">
+                        <i class="fas {{ info.icon }} text-{{ info.color }}-600 text-4xl sm:text-5xl"></i>
+                        <h3 class="text-lg sm:text-xl font-semibold text-gray-800">{{ role_name }}</h3>
+                        <p class="text-gray-500 text-xs sm:text-sm">{{ info.description }}</p>
+                        <a href="{{ info.url }}" class="bg-{{ info.color }}-600 text-white px-4 sm:px-5 py-2 sm:py-2.5 rounded-lg hover:bg-{{ info.color }}-700 transition text-sm sm:text-base">
+                            Access Dashboard
+                        </a>
+                    </div>
+                </div>
+                {% endif %}
+            {% endfor %}
+
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-blue-800 text-white text-center py-6 mt-auto">
+        <p class="text-sm sm:text-base">© {{ now|date:"Y" }} CBC NEMIS Portal — Transforming Education Management in Kenya</p>
+    </footer>
+</div>
+{% endblock %}

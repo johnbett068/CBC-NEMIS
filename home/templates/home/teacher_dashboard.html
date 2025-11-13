@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ dashboard_title }}{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50 p-6">
+
+    <!-- Breadcrumb -->
+    <nav class="text-gray-500 text-sm mb-4" aria-label="Breadcrumb">
+        <ol class="list-reset flex">
+            <li><a href="{% url 'home:home' %}" class="hover:text-gray-700">Home</a></li>
+            <li><span class="mx-2">/</span></li>
+            <li class="text-gray-700">{{ dashboard_title }}</li>
+        </ol>
+    </nav>
+
+    <!-- Dashboard Header -->
+    <h1 class="text-3xl font-bold text-blue-800 mb-6">{{ dashboard_title }} — {{ school.name }}</h1>
+
+    <!-- Summary Cards -->
+    <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="bg-blue-100 p-6 rounded-2xl shadow hover:shadow-lg">
+            <h2 class="text-xl font-semibold text-blue-800">Classes</h2>
+            <p class="text-gray-700 mt-2">{{ total_classes }}</p>
+        </div>
+        <div class="bg-green-100 p-6 rounded-2xl shadow hover:shadow-lg">
+            <h2 class="text-xl font-semibold text-green-800">Subjects</h2>
+            <p class="text-gray-700 mt-2">{{ total_subjects }}</p>
+        </div>
+        <div class="bg-yellow-100 p-6 rounded-2xl shadow hover:shadow-lg">
+            <h2 class="text-xl font-semibold text-yellow-800">Learners</h2>
+            <p class="text-gray-700 mt-2">{{ total_learners }}</p>
+        </div>
+    </section>
+
+    <!-- Classes & Subjects -->
+    <section class="mt-10 grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+            <h2 class="text-2xl font-semibold mb-4">Classes</h2>
+            <ul class="bg-white rounded-2xl shadow p-4 space-y-2">
+                {% for c in classes %}
+                <li class="p-2 bg-blue-50 rounded">{{ c.class_name }}</li>
+                {% empty %}
+                <li>No classes assigned.</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div>
+            <h2 class="text-2xl font-semibold mb-4">Subjects</h2>
+            <ul class="bg-white rounded-2xl shadow p-4 space-y-2">
+                {% for s in subjects %}
+                <li class="p-2 bg-green-50 rounded">{{ s.subject.name }}</li>
+                {% empty %}
+                <li>No subjects assigned.</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </section>
+
+    <!-- Learners Table -->
+    <section class="mt-10">
+        <h2 class="text-2xl font-semibold mb-4">Learners</h2>
+        <div class="overflow-x-auto">
+            <table class="min-w-full bg-white rounded-2xl shadow">
+                <thead class="bg-yellow-200 text-left">
+                    <tr>
+                        <th class="py-2 px-4">Name</th>
+                        <th class="py-2 px-4">Class</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for learner in learners %}
+                    <tr class="border-b">
+                        <td class="py-2 px-4">{{ learner.get_full_name }}</td>
+                        <td class="py-2 px-4">{{ learner.class_name }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td class="py-2 px-4" colspan="2">No learners found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+</div>
+{% endblock %}

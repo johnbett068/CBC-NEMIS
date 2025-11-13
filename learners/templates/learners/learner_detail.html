@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>{{ dashboard_title }}</h1>
+
+<div class="flex items-center space-x-4 my-4">
+    {% if learner.profile_image %}
+        <img src="{{ learner.profile_image.url }}" alt="Profile Image" class="w-24 h-24 rounded-full">
+    {% else %}
+        <div class="w-24 h-24 bg-gray-300 rounded-full flex items-center justify-center">N/A</div>
+    {% endif %}
+    <div>
+        <p><strong>Name:</strong> {{ learner.first_name }} {{ learner.last_name }}</p>
+        <p><strong>Admission No.:</strong> {{ learner.admission_no }}</p>
+        <p><strong>Grade:</strong> {{ learner.grade }}</p>
+        <p><strong>Stream:</strong> {{ learner.stream.name }}</p>
+        <p><strong>Email:</strong> {{ learner.email }}</p>
+        <p><strong>Phone:</strong> {{ learner.phone }}</p>
+    </div>
+</div>
+
+<a href="{% url 'learners:learner_update' learner.pk %}" class="mt-4 inline-block px-4 py-2 bg-green-500 text-white rounded">Edit Learner</a>
+{% endblock %}
