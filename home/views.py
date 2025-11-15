@@ -18,7 +18,7 @@ from users.utils import (
 # --------------------------
 # Home / Main Dashboard View
 # --------------------------
-@login_required
+
 def home(request):
     """
     Home page showing quick stats and role cards.

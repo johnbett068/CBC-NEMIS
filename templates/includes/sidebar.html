@@ -1,4 +1,7 @@
-<!-- sidebar.html -->
+{# templates/sidebar.html #}
+{% load static %}
+{% load roles_extras %}
+
 <div class="h-full flex flex-col py-6 px-4 bg-gray-100">
 
     <!-- User Info -->
@@ -22,7 +25,7 @@
             </li>
 
             <!-- Schools -->
-            {% if user.role in ['cabinet_secretary', 'county_director', 'subcounty_director', 'school_admin'] %}
+            {% if user.is_authenticated and user.role|in_roles:"cabinet_secretary,county_director,subcounty_director,school_admin" %}
             <li>
                 <a href="{% url 'schools:school_list' %}" class="flex items-center p-2 text-gray-700 rounded hover:bg-blue-200 hover:text-blue-800">
                     <i class="fas fa-school w-5"></i>
@@ -32,7 +35,7 @@
             {% endif %}
 
             <!-- Teachers (Collapsible) -->
-            {% if user.role in ['cabinet_secretary', 'county_director', 'subcounty_director', 'school_admin', 'teacher'] %}
+            {% if user.is_authenticated and user.role|in_roles:"cabinet_secretary,county_director,subcounty_director,school_admin,teacher" %}
             <li x-data="{ open: false }">
                 <button @click="open = !open"
                         class="flex items-center justify-between w-full p-2 text-gray-700 rounded hover:bg-blue-200 hover:text-blue-800 focus:outline-none">
@@ -46,7 +49,7 @@
                     <li>
                         <a href="{% url 'teachers:teacher_list' %}" class="block p-1 rounded hover:bg-blue-100">All Teachers</a>
                     </li>
-                    {% if user.role in ['cabinet_secretary', 'school_admin'] %}
+                    {% if user.role|in_roles:"cabinet_secretary,school_admin" %}
                     <li>
                         <a href="{% url 'teachers:teacher_add' %}" class="block p-1 rounded hover:bg-blue-100">Add Teacher</a>
                     </li>
@@ -62,7 +65,7 @@
             {% endif %}
 
             <!-- Learners (Collapsible) -->
-            {% if user.role in ['cabinet_secretary', 'county_director', 'subcounty_director', 'school_admin', 'teacher'] %}
+            {% if user.is_authenticated and user.role|in_roles:"cabinet_secretary,county_director,subcounty_director,school_admin,teacher" %}
             <li x-data="{ open: false }">
                 <button @click="open = !open"
                         class="flex items-center justify-between w-full p-2 text-gray-700 rounded hover:bg-blue-200 hover:text-blue-800 focus:outline-none">
@@ -76,7 +79,7 @@
                     <li>
                         <a href="{% url 'learners:learner_list' %}" class="block p-1 rounded hover:bg-blue-100">All Learners</a>
                     </li>
-                    {% if user.role in ['cabinet_secretary', 'school_admin'] %}
+                    {% if user.role|in_roles:"cabinet_secretary,school_admin" %}
                     <li>
                         <a href="{% url 'learners:add_learner' %}" class="block p-1 rounded hover:bg-blue-100">Add Learner</a>
                     </li>
@@ -89,7 +92,7 @@
             {% endif %}
 
             <!-- Subjects -->
-            {% if user.role in ['cabinet_secretary', 'county_director', 'subcounty_director', 'school_admin', 'teacher'] %}
+            {% if user.is_authenticated and user.role|in_roles:"cabinet_secretary,county_director,subcounty_director,school_admin,teacher" %}
             <li>
                 <a href="{% url 'subjects:subject_list' %}" class="flex items-center p-2 text-gray-700 rounded hover:bg-blue-200 hover:text-blue-800">
                     <i class="fas fa-book w-5"></i>

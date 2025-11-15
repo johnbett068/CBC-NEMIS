@@ -15,24 +15,26 @@
 
             <!-- Home -->
             <li>
-                <a href="{% url 'home:home' %}" class="flex items-center p-2 text-gray-700 rounded hover:bg-blue-200 hover:text-blue-800">
+                <a href="{% url 'home:home' %}"
+                   class="flex items-center p-2 text-gray-700 rounded hover:bg-blue-200 hover:text-blue-800">
                     <i class="fas fa-home w-5"></i>
                     <span class="ml-2 label-text">Home</span>
                 </a>
             </li>
 
             <!-- Schools -->
-            {% if user.role in ['cabinet_secretary', 'county_director', 'subcounty_director', 'school_admin'] %}
+            {% if user.role == 'cabinet_secretary' or user.role == 'county_director' or user.role == 'subcounty_director' or user.role == 'school_admin' %}
             <li>
-                <a href="{% url 'schools:school_list' %}" class="flex items-center p-2 text-gray-700 rounded hover:bg-blue-200 hover:text-blue-800">
+                <a href="{% url 'schools:school_list' %}"
+                   class="flex items-center p-2 text-gray-700 rounded hover:bg-blue-200 hover:text-blue-800">
                     <i class="fas fa-school w-5"></i>
                     <span class="ml-2 label-text">Schools</span>
                 </a>
             </li>
             {% endif %}
 
-            <!-- Teachers (Collapsible) -->
-            {% if user.role in ['cabinet_secretary', 'county_director', 'subcounty_director', 'school_admin', 'teacher'] %}
+            <!-- Teachers -->
+            {% if user.role == 'cabinet_secretary' or user.role == 'county_director' or user.role == 'subcounty_director' or user.role == 'school_admin' or user.role == 'teacher' %}
             <li x-data="{ open: false }">
                 <button @click="open = !open"
                         class="flex items-center justify-between w-full p-2 text-gray-700 rounded hover:bg-blue-200 hover:text-blue-800 focus:outline-none">
@@ -40,29 +42,24 @@
                         <i class="fas fa-chalkboard-teacher w-5"></i>
                         <span class="ml-2 label-text">Teachers</span>
                     </span>
-                    <i :class="{'fa-chevron-down': !open, 'fa-chevron-up': open}" class="fas w-4 transition-transform"></i>
+                    <i :class="{'fa-chevron-down': !open, 'fa-chevron-up': open}"
+                       class="fas w-4 transition-transform"></i>
                 </button>
+
                 <ul x-show="open" class="pl-8 mt-2 space-y-1 text-gray-600" x-cloak>
-                    <li>
-                        <a href="{% url 'teachers:teacher_list' %}" class="block p-1 rounded hover:bg-blue-100">All Teachers</a>
-                    </li>
-                    {% if user.role in ['cabinet_secretary', 'school_admin'] %}
-                    <li>
-                        <a href="{% url 'teachers:teacher_add' %}" class="block p-1 rounded hover:bg-blue-100">Add Teacher</a>
-                    </li>
-                    <li>
-                        <a href="{% url 'teachers:subject_assignment_list' %}" class="block p-1 rounded hover:bg-blue-100">Subject Assignments</a>
-                    </li>
-                    <li>
-                        <a href="{% url 'teachers:class_assignment_add' %}" class="block p-1 rounded hover:bg-blue-100">Class Assignments</a>
-                    </li>
+                    <li><a href="{% url 'teachers:teacher_list' %}" class="block p-1 rounded hover:bg-blue-100">All Teachers</a></li>
+
+                    {% if user.role == 'cabinet_secretary' or user.role == 'school_admin' %}
+                    <li><a href="{% url 'teachers:teacher_add' %}" class="block p-1 rounded hover:bg-blue-100">Add Teacher</a></li>
+                    <li><a href="{% url 'teachers:subject_assignment_list' %}" class="block p-1 rounded hover:bg-blue-100">Subject Assignments</a></li>
+                    <li><a href="{% url 'teachers:class_assignment_add' %}" class="block p-1 rounded hover:bg-blue-100">Class Assignments</a></li>
                     {% endif %}
                 </ul>
             </li>
             {% endif %}
 
-            <!-- Learners (Collapsible) -->
-            {% if user.role in ['cabinet_secretary', 'county_director', 'subcounty_director', 'school_admin', 'teacher'] %}
+            <!-- Learners -->
+            {% if user.role == 'cabinet_secretary' or user.role == 'county_director' or user.role == 'subcounty_director' or user.role == 'school_admin' or user.role == 'teacher' %}
             <li x-data="{ open: false }">
                 <button @click="open = !open"
                         class="flex items-center justify-between w-full p-2 text-gray-700 rounded hover:bg-blue-200 hover:text-blue-800 focus:outline-none">
@@ -70,28 +67,27 @@
                         <i class="fas fa-user-graduate w-5"></i>
                         <span class="ml-2 label-text">Learners</span>
                     </span>
-                    <i :class="{'fa-chevron-down': !open, 'fa-chevron-up': open}" class="fas w-4 transition-transform"></i>
+                    <i :class="{'fa-chevron-down': !open, 'fa-chevron-up': open}"
+                       class="fas w-4 transition-transform"></i>
                 </button>
+
                 <ul x-show="open" class="pl-8 mt-2 space-y-1 text-gray-600" x-cloak>
-                    <li>
-                        <a href="{% url 'learners:learner_list' %}" class="block p-1 rounded hover:bg-blue-100">All Learners</a>
-                    </li>
-                    {% if user.role in ['cabinet_secretary', 'school_admin'] %}
-                    <li>
-                        <a href="{% url 'learners:add_learner' %}" class="block p-1 rounded hover:bg-blue-100">Add Learner</a>
-                    </li>
+                    <li><a href="{% url 'learners:learner_list' %}" class="block p-1 rounded hover:bg-blue-100">All Learners</a></li>
+
+                    {% if user.role == 'cabinet_secretary' or user.role == 'school_admin' %}
+                    <li><a href="{% url 'learners:add_learner' %}" class="block p-1 rounded hover:bg-blue-100">Add Learner</a></li>
                     {% endif %}
-                    <li>
-                        <a href="#" class="block p-1 rounded hover:bg-blue-100">Edit Learner</a>
-                    </li>
+
+                    <li><a href="#" class="block p-1 rounded hover:bg-blue-100">Edit Learner</a></li>
                 </ul>
             </li>
             {% endif %}
 
             <!-- Subjects -->
-            {% if user.role in ['cabinet_secretary', 'county_director', 'subcounty_director', 'school_admin', 'teacher'] %}
+            {% if user.role == 'cabinet_secretary' or user.role == 'county_director' or user.role == 'subcounty_director' or user.role == 'school_admin' or user.role == 'teacher' %}
             <li>
-                <a href="{% url 'subjects:subject_list' %}" class="flex items-center p-2 text-gray-700 rounded hover:bg-blue-200 hover:text-blue-800">
+                <a href="{% url 'subjects:subject_list' %}"
+                   class="flex items-center p-2 text-gray-700 rounded hover:bg-blue-200 hover:text-blue-800">
                     <i class="fas fa-book w-5"></i>
                     <span class="ml-2 label-text">Subjects</span>
                 </a>
@@ -101,7 +97,8 @@
             <!-- Logout -->
             {% if user.is_authenticated %}
             <li>
-                <a href="{% url 'accounts:logout' %}" class="flex items-center p-2 text-red-600 rounded hover:bg-red-100 hover:text-red-800">
+                <a href="{% url 'accounts:logout' %}"
+                   class="flex items-center p-2 text-red-600 rounded hover:bg-red-100 hover:text-red-800">
                     <i class="fas fa-sign-out-alt w-5"></i>
                     <span class="ml-2 label-text">Logout</span>
                 </a>
@@ -112,5 +109,4 @@
     </nav>
 </div>
 
-<!-- AlpineJS for collapsible menus -->
 <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
