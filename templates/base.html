@@ -18,7 +18,6 @@
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 
     <script>
-        // Toggle sidebar for mobile
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
             const overlay = document.getElementById('overlay');
@@ -26,16 +25,16 @@
             overlay.classList.toggle('hidden');
         }
 
-        // Toggle sidebar collapse for desktop
         function toggleCollapse() {
             const sidebar = document.getElementById('sidebar');
             const main = document.getElementById('main-content');
+
             sidebar.classList.toggle('w-64');
             sidebar.classList.toggle('w-20');
+
             main.classList.toggle('md:ml-64');
             main.classList.toggle('md:ml-20');
 
-            // Hide text labels when collapsed
             const labels = document.querySelectorAll('#sidebar .label-text');
             labels.forEach(label => label.classList.toggle('hidden'));
         }
@@ -53,11 +52,17 @@
 
             <!-- Desktop Menu -->
             <ul class="hidden md:flex space-x-8 text-white font-medium">
+
                 <li><a href="{% url 'home:home' %}" class="hover:text-gray-200">Home</a></li>
                 <li><a href="{% url 'schools:school_list' %}" class="hover:text-gray-200">Schools</a></li>
                 <li><a href="{% url 'teachers:teacher_list' %}" class="hover:text-gray-200">Teachers</a></li>
                 <li><a href="{% url 'learners:learner_list' %}" class="hover:text-gray-200">Learners</a></li>
+
+                {% if not user.is_authenticated %}
                 <li><a href="{% url 'accounts:login' %}" class="hover:text-gray-200">Login</a></li>
+                {% else %}
+                <li><a href="{% url 'accounts:logout' %}" class="hover:text-gray-200">Logout</a></li>
+                {% endif %}
             </ul>
 
             <!-- Mobile Menu Button -->
@@ -67,12 +72,13 @@
         </div>
     </nav>
 
-    <!-- Layout: Sidebar + Main Content -->
+    <!-- Layout -->
     <div class="flex flex-1 relative">
 
         <!-- Sidebar -->
-        <aside id="sidebar" class="fixed inset-y-0 left-0 w-64 bg-gray-100 border-r border-gray-300 transform -translate-x-full md:translate-x-0 transition-all duration-300 ease-in-out z-50 overflow-y-auto">
-            <!-- Collapse Button -->
+        <aside id="sidebar"
+               class="fixed inset-y-0 left-0 w-64 bg-gray-100 border-r border-gray-300 transform -translate-x-full md:translate-x-0 transition-all duration-300 ease-in-out z-50 overflow-y-auto">
+
             <div class="flex justify-end p-2 md:hidden">
                 <button onclick="toggleCollapse()" class="text-gray-700 hover:text-blue-700">
                     <i class="fas fa-angle-double-left"></i>
@@ -88,7 +94,6 @@
         <!-- Main Content -->
         <main id="main-content" class="flex-1 p-6 md:ml-64 transition-all duration-300 ease-in-out">
 
-            <!-- Breadcrumb Block -->
             {% block breadcrumb %}
             {% if breadcrumb %}
             <nav class="bg-gray-100 rounded-md px-4 py-2 mb-6 flex items-center space-x-2 text-sm sm:text-base">
@@ -104,18 +109,14 @@
             {% endif %}
             {% endblock %}
 
-            <!-- Page Content Block -->
-            {% block content %}
-            {% endblock %}
+            {% block content %}{% endblock %}
         </main>
     </div>
 
-    <!-- Footer -->
     <footer class="bg-gray-900 text-gray-300 py-6 text-center mt-auto">
         <p>&copy; {{ now|date:"Y" }} CBC Education Portal | Empowering Kenya’s Education through Innovation</p>
     </footer>
 
-    <!-- AOS JS -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
         AOS.init({
