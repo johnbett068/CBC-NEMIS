@@ -13,4 +13,6 @@ urlpatterns = [
     path('learners/', include('learners.urls', namespace='learners')),
     path('schools/', include('schools.urls', namespace='schools')),
     path('subjects/', include('subjects.urls', namespace='subjects')),
+    path('accounts/', include('accounts.urls', namespace='accounts')),
+
 ]

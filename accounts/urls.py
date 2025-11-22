@@ -1,15 +1,17 @@
-# accounts/urls.py
 from django.urls import path
+from . import views
 from django.contrib.auth import views as auth_views
 
 app_name = "accounts"
 
 urlpatterns = [
-    # Login / Logout using Django built-in views (will use accounts/login.html)
-    path("login/", auth_views.LoginView.as_view(template_name="accounts/login.html"), name="login"),
-    path("logout/", auth_views.LogoutView.as_view(), name="logout"),
+    # CUSTOM LOGIN
+    path("login/", views.login_user, name="login"),
 
-    # Password reset (built-in views)
+    # LOGOUT
+    path("logout/", views.logout_user, name="logout"),
+
+    # PASSWORD RESET (Django built-in)
     path(
         "password_reset/",
         auth_views.PasswordResetView.as_view(template_name="accounts/password_reset.html"),

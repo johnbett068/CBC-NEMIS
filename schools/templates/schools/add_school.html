@@ -10,16 +10,75 @@
         <form method="post">
             {% csrf_token %}
             {{ form.as_p }}
-            <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded mt-4">
+
+            <button type="submit"
+                    class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded mt-4">
                 Add School
             </button>
         </form>
     </div>
 
     <div class="mt-6">
-        <a href="{% url 'schools:school_list' %}" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">
+        <a href="{% url 'schools:school_list' %}"
+           class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">
             Back to Schools List
         </a>
     </div>
 </div>
+
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    // Load SubCounties when County changes
+    $(document).on('change', '#id_county', function () {
+        let countyId = $(this).val();
+
+        $.ajax({
+            url: "{% url 'schools:ajax_load_subcounties' %}",
+            data: { 'county_id': countyId },
+            success: function (data) {
+
+                let subcountySelect = $("#id_sub_county");
+                let wardSelect = $("#id_ward");
+
+                subcountySelect.empty();
+                wardSelect.empty();
+
+                // Default option
+                subcountySelect.append('<option value="">Select Sub-County</option>');
+
+                data.subcounties.forEach(sub => {
+                    subcountySelect.append(
+                        `<option value="${sub.id}">${sub.name}</option>`
+                    );
+                });
+            }
+        });
+    });
+
+    // Load Wards when Sub-County changes
+    $(document).on('change', '#id_sub_county', function () {
+        let subcountyId = $(this).val();
+
+        $.ajax({
+            url: "{% url 'schools:ajax_load_wards' %}",
+            data: { 'subcounty_id': subcountyId },
+            success: function (data) {
+
+                let wardSelect = $("#id_ward");
+                wardSelect.empty();
+
+                wardSelect.append('<option value="">Select Ward</option>');
+
+                data.wards.forEach(ward => {
+                    wardSelect.append(
+                        `<option value="${ward.id}">${ward.name}</option>`
+                    );
+                });
+            }
+        });
+    });
+</script>
+
 {% endblock %}

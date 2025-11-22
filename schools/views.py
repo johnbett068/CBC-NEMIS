@@ -2,7 +2,9 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
+from django.http import JsonResponse
 
+from location.models import SubCounty, Ward
 from .models import School
 from .forms import SchoolForm
 from utils.decorators import role_required
@@ -20,7 +22,7 @@ def school_list(request):
     elif role == 'county_director':
         schools = School.objects.filter(county=user.county)
     elif role == 'subcounty_director':
-        schools = School.objects.filter(subcounty=user.subcounty)
+        schools = School.objects.filter(sub_county=user.sub_county)
     else:  # school_admin
         schools = School.objects.filter(id=getattr(user, 'school_id', None))
 
@@ -93,3 +95,26 @@ def login_school_admin(request):
         'dashboard_title': "School Admin Login",
     }
     return render(request, 'schools/login.html', context)
+
+
+# -----------------------------
+# DYNAMIC AJAX ENDPOINTS
+# -----------------------------
+
+@login_required
+def load_subcounties(request):
+    county_id = request.GET.get('county_id')
+    subcounties = SubCounty.objects.filter(county_id=county_id).order_by("name")
+    data = [{"id": sc.id, "name": sc.name} for sc in subcounties]
+    return JsonResponse({"subcounties": data})
+
+
+@login_required
+def load_wards(request):
+    subcounty_id = request.GET.get('subcounty_id')
+
+    # Correct FK name: sub_county
+    wards = Ward.objects.filter(sub_county_id=subcounty_id).order_by("name")
+
+    data = [{"id": w.id, "name": w.name} for w in wards]
+    return JsonResponse({"wards": data})

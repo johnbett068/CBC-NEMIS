@@ -58,7 +58,6 @@
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-10 justify-items-center">
 
-            {% comment %} Highlight current user's role {% endcomment %}
             {% if role %}
                 {% for role_name, info in role_cards.items %}
                     {% if role_name|lower == role and role_name != "Learner" %}
@@ -80,19 +79,18 @@
                 {% endfor %}
             {% endif %}
 
-            {% comment %} Display other role cards (exclude learners) {% endcomment %}
             {% for role_name, info in role_cards.items %}
                 {% if role_name|lower != role and role_name != "Learner" %}
-                <div class="group bg-white p-6 sm:p-8 rounded-2xl shadow-lg hover:shadow-2xl transition transform hover:-translate-y-1 sm:hover:-translate-y-2 border-t-4 border-{{ info.color }}-600 w-full max-w-xs">
-                    <div class="flex flex-col items-center text-center space-y-3 sm:space-y-4">
-                        <i class="fas {{ info.icon }} text-{{ info.color }}-600 text-4xl sm:text-5xl"></i>
-                        <h3 class="text-lg sm:text-xl font-semibold text-gray-800">{{ role_name }}</h3>
-                        <p class="text-gray-500 text-xs sm:text-sm">{{ info.description }}</p>
-                        <a href="{{ info.url }}" class="bg-{{ info.color }}-600 text-white px-4 sm:px-5 py-2 sm:py-2.5 rounded-lg hover:bg-{{ info.color }}-700 transition text-sm sm:text-base">
-                            Access Dashboard
-                        </a>
+                    <div class="group bg-white p-6 sm:p-8 rounded-2xl shadow-lg hover:shadow-2xl transition transform hover:-translate-y-1 sm:hover:-translate-y-2 border-t-4 border-{{ info.color }}-600 w-full max-w-xs">
+                        <div class="flex flex-col items-center text-center space-y-3 sm:space-y-4">
+                            <i class="fas {{ info.icon }} text-{{ info.color }}-600 text-4xl sm:text-5xl"></i>
+                            <h3 class="text-lg sm:text-xl font-semibold text-gray-800">{{ role_name }}</h3>
+                            <p class="text-gray-500 text-xs sm:text-sm">{{ info.description }}</p>
+                            <a href="{{ info.url }}" class="bg-{{ info.color }}-600 text-white px-4 sm:px-5 py-2 sm:py-2.5 rounded-lg hover:bg-{{ info.color }}-700 transition text-sm sm:text-base">
+                                Access Dashboard
+                            </a>
+                        </div>
                     </div>
-                </div>
                 {% endif %}
             {% endfor %}
 
@@ -103,5 +101,6 @@
     <footer class="bg-blue-800 text-white text-center py-6 mt-auto">
         <p class="text-sm sm:text-base">© {{ now|date:"Y" }} CBC NEMIS Portal — Transforming Education Management in Kenya</p>
     </footer>
+
 </div>
 {% endblock %}

@@ -1,7 +1,7 @@
 <!-- sidebar.html -->
 <div class="h-full flex flex-col py-6 px-4 bg-gray-100">
 
-    <!-- User Info — ONLY WHEN LOGGED IN -->
+    <!-- USER INFO (Shown ONLY when logged in) -->
     {% if user.is_authenticated %}
     <div class="mb-6 px-2">
         <p class="text-gray-700 font-semibold">Hi, {{ user.username }}</p>
@@ -12,49 +12,53 @@
     </div>
     {% endif %}
 
-    <!-- Menu -->
+    <!-- Menu Items -->
     <nav class="flex-1">
         <ul class="space-y-2">
 
+            <!-- Home -->
             <li>
                 <a href="{% url 'home:home' %}"
                    class="flex items-center p-2 rounded hover:bg-gray-200 transition">
                     <i class="fas fa-home w-6"></i>
-                    <span class="ml-3 label-text">Home</span>
+                    <span class="ml-3">Home</span>
                 </a>
             </li>
 
+            <!-- Schools -->
             <li>
                 <a href="{% url 'schools:school_list' %}"
                    class="flex items-center p-2 rounded hover:bg-gray-200 transition">
                     <i class="fas fa-school w-6"></i>
-                    <span class="ml-3 label-text">Schools</span>
+                    <span class="ml-3">Schools</span>
                 </a>
             </li>
 
+            <!-- Teachers -->
             <li>
                 <a href="{% url 'teachers:teacher_list' %}"
                    class="flex items-center p-2 rounded hover:bg-gray-200 transition">
                     <i class="fas fa-chalkboard-teacher w-6"></i>
-                    <span class="ml-3 label-text">Teachers</span>
+                    <span class="ml-3">Teachers</span>
                 </a>
             </li>
 
+            <!-- Learners -->
             <li>
                 <a href="{% url 'learners:learner_list' %}"
                    class="flex items-center p-2 rounded hover:bg-gray-200 transition">
                     <i class="fas fa-users w-6"></i>
-                    <span class="ml-3 label-text">Learners</span>
+                    <span class="ml-3">Learners</span>
                 </a>
             </li>
 
-            <!-- Login menu only when NOT logged in -->
+            <!-- LOGIN (Only when NOT logged in) -->
             {% if not user.is_authenticated %}
             <li>
                 <a href="{% url 'accounts:login' %}"
                    class="flex items-center p-2 rounded hover:bg-gray-200 transition">
                     <i class="fas fa-sign-in-alt w-6"></i>
-                    <span class="ml-3 label-text">Login</span>
+                    <span class="ml-3">Login</span>
                 </a>
             </li>
             {% endif %}
