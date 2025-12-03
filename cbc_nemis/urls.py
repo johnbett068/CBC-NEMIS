@@ -5,7 +5,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     
     # Authentication URLs
-    path('accounts/', include('accounts.urls', namespace='accounts')),  # <-- include namespace
+    path('accounts/', include('accounts.urls', namespace='accounts')),
 
     # Your apps
     path('', include('home.urls', namespace='home')),
@@ -13,6 +13,4 @@ urlpatterns = [
     path('learners/', include('learners.urls', namespace='learners')),
     path('schools/', include('schools.urls', namespace='schools')),
     path('subjects/', include('subjects.urls', namespace='subjects')),
-    path('accounts/', include('accounts.urls', namespace='accounts')),
-
 ]

@@ -16,8 +16,22 @@ class CustomUser(AbstractUser):
         ('learner', 'Learner'),
     ]
 
-    role = models.CharField(max_length=50, choices=ROLE_CHOICES)
-    profile_image = models.ImageField(upload_to='profile_images/', blank=True, null=True)
+    # Allow blank & null to avoid superuser creation errors and role issues
+    role = models.CharField(
+        max_length=50,
+        choices=ROLE_CHOICES,
+        blank=True,
+        null=True,
+        default='teacher'
+    )
+
+    profile_image = models.ImageField(
+        upload_to='profile_images/',
+        blank=True,
+        null=True
+    )
 
     def __str__(self):
-        return f"{self.username} ({self.get_role_display()})"
+        # Safe fallback if role is missing
+        role_display = self.get_role_display() if self.role else "No Role"
+        return f"{self.username} ({role_display})"

@@ -1,69 +1,102 @@
+# accounts/views.py
+
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.views.decorators.http import require_http_methods
+from django.utils.http import url_has_allowed_host_and_scheme
+from django.conf import settings
+from django.urls import reverse
+
+from .forms import LoginForm
 
 
+# ============================================================
+# SAFE ?next= REDIRECT
+# ============================================================
+def _get_safe_next(request):
+    next_url = request.POST.get("next") or request.GET.get("next")
+    if not next_url:
+        return None
+
+    allowed_hosts = {request.get_host()}
+    allowed_hosts.update(getattr(settings, "ALLOWED_HOSTS", []))
+
+    if url_has_allowed_host_and_scheme(
+        url=next_url,
+        allowed_hosts=allowed_hosts,
+        require_https=request.is_secure()
+    ):
+        return next_url
+    return None
+
+
+# ============================================================
+# ROLE-BASED REDIRECTION
+# ============================================================
+def redirect_user_by_role(user):
+
+    role = getattr(user, "role", None)
+
+    role_map = {
+        "cabinet_secretary": "cabinet:home",
+        "county_director": "county:home",
+        "subcounty_director": "subcounty:home",
+        "school_admin": "schools:school_list",
+        "teacher": "teachers:home",
+        "learner": "learners:home",
+    }
+
+    if role in role_map:
+        return redirect(role_map[role])
+
+    return redirect("home:home")
+
+
+# ============================================================
+# UNIVERSAL LOGIN
+# ============================================================
 def login_user(request):
-    """
-    Custom login view that:
-    - Authenticates user
-    - Shows errors when login fails
-    - Redirects user based on role
-    """
+
+    # Already logged in → no need to show login page
     if request.user.is_authenticated:
         return redirect_user_by_role(request.user)
 
-    if request.method == 'POST':
-        username = request.POST.get('username')
-        password = request.POST.get('password')
+    next_safe = _get_safe_next(request)
 
-        if not username or not password:
-            messages.error(request, "Please enter both username and password.")
-            return render(request, "accounts/login.html")
+    if request.method == "POST":
+        form = LoginForm(request, data=request.POST)
 
-        user = authenticate(request, username=username, password=password)
+        if form.is_valid():
+            user = form.get_user()
 
-        if user is not None:
+            if not user.is_active:
+                messages.error(request, "Your account is inactive. Contact admin.")
+                return render(request, "accounts/login.html", {
+                    "form": form,
+                    "next": next_safe
+                })
+
             login(request, user)
-            return redirect_user_by_role(user)
-        else:
-            messages.error(request, "Invalid username or password.")
-            return render(request, "accounts/login.html")
+            return redirect(next_safe) if next_safe else redirect_user_by_role(user)
 
-    return render(request, 'accounts/login.html')
+        # Invalid credentials → Django adds errors automatically
+        messages.error(request, "Invalid username or password.")
 
+    else:
+        form = LoginForm()
 
-def redirect_user_by_role(user):
-    """Redirect user to dashboard based on their role."""
-
-    role = getattr(user, 'role', None)
-
-    if role == 'cabinet_secretary':
-        return redirect('cabinet:home')
-
-    elif role == 'county_director':
-        return redirect('county:home')
-
-    elif role == 'subcounty_director':
-        return redirect('subcounty:home')
-
-    elif role == 'school_admin':
-        return redirect('schools:school_list')
-
-    elif role == 'teacher':
-        return redirect('teachers:home')
-
-    # default fallback
-    return redirect('home:home')
+    return render(request, "accounts/login.html", {
+        "form": form,
+        "next": next_safe
+    })
 
 
+# ============================================================
+# LOGOUT
+# ============================================================
 @require_http_methods(["GET", "POST"])
 def logout_user(request):
-    """
-    Safe logout (GET + POST).
-    Fixes Method Not Allowed error.
-    """
     logout(request)
-    messages.success(request, "You have been logged out successfully.")
-    return redirect('accounts:login')
+    messages.success(request, "Logged out successfully.")
+    return redirect("accounts:login")
